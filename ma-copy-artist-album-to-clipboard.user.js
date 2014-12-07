@@ -22,10 +22,9 @@ function renderButtons()
         $(tmpl).insertBefore($( this )).click(function(event) {
             event.preventDefault();
             GM_setClipboard(cpStr + "\n");
-            $('<div style="color:#FFF;background: #6D4C4C; padding: 3px; position: absolute; top: 10px"></div>')
-            .appendTo($(this).css('postition: relative'))
+            $('<div style="color:#FFF;background: #6D4C4C; padding: 3px; position: absolute; top: -20px; left: -20px; white-space: nowrap"></div>')
+            .appendTo($(this).css('position', 'relative'))
                 .text('Copied "' + cpStr + '" to clipboard').show().delay(2000).fadeOut();
-
         });
     });
 }
