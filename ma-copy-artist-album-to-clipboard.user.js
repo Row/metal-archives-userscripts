@@ -3,6 +3,7 @@
 // @namespace  https://github.com/Row/metal-archives-userscripts
 // @version    0.1.2
 // @grant GM_setClipboard
+// @grant unsafeWindow
 // @description Adds a button beside each album tilte which copies to 'artist name - album name' to clipboard.
 // @match      https://www.metal-archives.com/bands/*
 // @copyright  2014+, Rowolta
