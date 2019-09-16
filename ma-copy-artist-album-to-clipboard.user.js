@@ -1,23 +1,19 @@
 // ==UserScript==
 // @name       Metal-Archives Copy artist - album to clipboard
 // @namespace  https://github.com/Row/metal-archives-userscripts
-// @version    0.1.2
+// @version    0.1.3
 // @grant GM_setClipboard
 // @grant unsafeWindow
 // @description Adds a button beside each album tilte which copies to 'artist name - album name' to clipboard.
 // @match      https://www.metal-archives.com/bands/*
-// @copyright  2014+, Rowolta
+// @copyright  2019+, Rowolta
 // ==/UserScript==
 
-/* jQuery from site */ 
-var $ = unsafeWindow.jQuery,
-    jQuery = unsafeWindow.jQuery,
-    artist = $('h1.band_name').text(),
+var $, jQuery, artist,
     tmpl = '<a class="iconContainer ui-state-default ui-corner-all" href="#" title="Copy to clipboard">\
                 <span class="ui-icon ui-icon-copy">Copy</span>\
             </a>';
-
-function renderButtons() 
+function renderButtons()
 {
     $("#band_disco a.other, #band_disco a.album,  #band_disco a.single,  #band_disco a.demo").each(function() {
         var cpStr = artist + " - " + $( this ).text();
@@ -38,4 +34,17 @@ function waitUntilAjaxIsLoaded()
     else
         window.setTimeout(waitUntilAjaxIsLoaded, 500);
 }
-waitUntilAjaxIsLoaded(); // Init
+
+function waitUntilJqueryHasLoaded()
+{
+    /* jQuery from site */
+    if (unsafeWindow.jQuery) {
+        $ = unsafeWindow.jQuery;
+        jQuery = unsafeWindow.jQuery;
+        artist = $('h1.band_name').text();
+        waitUntilAjaxIsLoaded(); // Init
+    } else {
+        window.setTimeout(waitUntilJqueryHasLoaded, 500);
+    }
+}
+waitUntilJqueryHasLoaded();
