@@ -28,9 +28,6 @@ function renderButtons() {
 }
 
 function generateTemplate(html, cpStr) {
-    let copiedTemplateString = `<div style="color:#FFF;background: #6D4C4C; padding: 3px; position: absolute; top: -20px; left: -20px; white-space: nowrap"></div>`.trim();
-    let copiedTemplate = document.createElement('template');
-    copiedTemplate.innerHTML = copiedTemplateString;
     let template = document.createElement('template');
     html = html.trim();
     template.innerHTML = html;
