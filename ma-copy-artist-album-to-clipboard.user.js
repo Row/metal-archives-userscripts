@@ -35,16 +35,5 @@ function waitUntilAjaxIsLoaded()
         window.setTimeout(waitUntilAjaxIsLoaded, 500);
 }
 
-function waitUntilJqueryHasLoaded()
-{
-    /* jQuery from site */
-    if (unsafeWindow.jQuery) {
-        $ = unsafeWindow.jQuery;
-        jQuery = unsafeWindow.jQuery;
-        artist = $('h1.band_name').text();
-        waitUntilAjaxIsLoaded(); // Init
-    } else {
-        window.setTimeout(waitUntilJqueryHasLoaded, 500);
-    }
-}
-waitUntilJqueryHasLoaded();
+waitUntilAjaxIsLoaded();
+
