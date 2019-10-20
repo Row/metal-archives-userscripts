@@ -39,6 +39,7 @@ function generateTemplate(html, cpStr) {
         setTimeout(() => {
             popUp.style.display = 'none';
         }, 2000);
+        popUp.style.display = 'block';
         
     });
     return template.content.childNodes;
