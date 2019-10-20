@@ -19,7 +19,7 @@ function renderButtons() {
     artist = document.querySelector('h1.band_name a').textContent;
     let band_disco = document.querySelectorAll("#band_disco a.other, #band_disco a.album,  #band_disco a.single,  #band_disco a.demo");
     band_disco.forEach(link => {
-        let cpStr = `${artist} " - " ${link.textContent}`;
+        let cpStr = `${artist} - ${link.textContent}`;
         let elements = generateTemplate(tmpl, cpStr);
         elements.forEach(elem => {
             link.prepend(elem);
@@ -35,8 +35,7 @@ function generateTemplate(html, cpStr) {
     template.content.children[1].addEventListener('click', (event) => {
         event.preventDefault();
         GM_setClipboard(cpStr + "\n");
-        popUp.innerText = `Copied "${cpStr}" to clipboard`;
-        popUp.style.position = 'relative';
+        popUp.innerText = `Copied ${cpStr} to clipboard`;
         setTimeout(() => {
             popUp.style.display = 'none';
         }, 2000);
