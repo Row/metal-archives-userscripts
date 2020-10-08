@@ -78,4 +78,18 @@ function waitUntilAjaxIsLoaded() {
     }
 }
 
+function waitUntilAjaxIsLoadedAgain() {
+  let copyButton = document.querySelector(".ui-icon-copy")
+  if(!copyButton) {
+      renderButtons()
+  } else {
+      window.setTimeout(waitUntilAjaxIsLoadedAgain, 100);
+  }
+}
+
+document.querySelector("body").addEventListener("click", (e) => {
+   let className = e.target.parentElement.className
+   if(className == "ui-tabs-anchor") window.setTimeout(waitUntilAjaxIsLoadedAgain, 500);
+});
+
 waitUntilAjaxIsLoaded();
