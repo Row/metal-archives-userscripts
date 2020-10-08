@@ -55,6 +55,7 @@ function renderButtons() {
     const cpStrs = cpArr.join("\n")
     const copyAllTemplate = generateTemplate(tmpl, cpStrs, "all")
     const nameColumn = document.querySelector("#ui-tabs-4 > table > thead > tr > th.releaseCol");
+    nameColumn.style.position = 'relative';
     copyAllTemplate.forEach(elem => {
         nameColumn.prepend(elem)
     });
