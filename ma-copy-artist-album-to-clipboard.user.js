@@ -83,7 +83,7 @@ function waitUntilAjaxIsLoadedAgain() {
   if(!copyButton) {
       renderButtons()
   } else {
-      window.setTimeout(waitUntilAjaxIsLoadedAgain, 100);
+      window.setTimeout(waitUntilAjaxIsLoadedAgain, 500);
   }
 }
 
