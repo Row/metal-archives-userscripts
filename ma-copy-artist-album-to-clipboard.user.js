@@ -41,25 +41,33 @@ const tmpl = `<div class="copy-artist-notification"></div>
 function renderButtons() {
     const artist = document.querySelector('h1.band_name a').textContent;
     const bandDisco = document.querySelectorAll("#band_disco a.other, #band_disco a.album,  #band_disco a.single,  #band_disco a.demo");
+    let cpArr = []
     bandDisco.forEach(link => {
         const cpStr = `${artist} - ${link.textContent}`;
-        const elements = generateTemplate(tmpl, cpStr);
+        cpArr.push(cpStr);
+        const elements = generateTemplate(tmpl, cpStr, cpStr);
         const insertPoint = link.parentNode;
         insertPoint.style.position = 'relative';
         elements.forEach(elem => {
             link.parentNode.prepend(elem);
         });
     });
+    const cpStrs = cpArr.join("\n")
+    const copyAllTemplate = generateTemplate(tmpl, cpStrs, "all")
+    const nameColumn = document.querySelector("#ui-tabs-4 > table > thead > tr > th.releaseCol");
+    copyAllTemplate.forEach(elem => {
+        nameColumn.prepend(elem)
+    });
 }
 
-function generateTemplate(html, cpStr) {
+function generateTemplate(html, cpStr, cpParam) {
     const template = document.createElement('template');
     template.innerHTML = html;
     const [popUp, button] = template.content.children;
     button.addEventListener('click', (event) => {
         event.preventDefault();
         GM_setClipboard(cpStr + "\n");
-        popUp.innerText = `Copied ${cpStr} to clipboard`;
+        popUp.innerText = `Copied ${cpParam} to clipboard`;
         setTimeout(() => {
             popUp.style.display = 'none';
         }, 2000);
