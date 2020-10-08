@@ -41,14 +41,39 @@ const tmpl = `<div class="copy-artist-notification"></div>
 function renderButtons() {
     const artist = document.querySelector('h1.band_name a').textContent;
     const bandDisco = document.querySelectorAll("#band_disco a.other, #band_disco a.album,  #band_disco a.single,  #band_disco a.demo");
+    let cpArr = []
     bandDisco.forEach(link => {
         const cpStr = `${artist} - ${link.textContent}`;
+        cpArr.push(cpStr);
         const elements = generateTemplate(tmpl, cpStr);
         const insertPoint = link.parentNode;
         insertPoint.style.position = 'relative';
         elements.forEach(elem => {
             link.parentNode.prepend(elem);
         });
+    });
+    const cpStrs = cpArr.join("\n")
+    generateCopyAllButton(tmpl, cpStrs)
+}
+
+function generateCopyAllButton(html, cpStrs) {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    const [popUp, button] = template.content.children;
+    button.addEventListener('click', (event) => {
+        event.preventDefault();
+        GM_setClipboard(cpStrs + "\n");
+        popUp.innerText = `Copied all to clipboard`;
+        setTimeout(() => {
+            popUp.style.display = 'none';
+        }, 2000);
+        popUp.style.display = 'block';
+    });
+
+
+    const nameColumn = document.querySelector("#ui-tabs-4 > table > thead > tr > th.releaseCol");
+    template.content.childNodes.forEach(elem => {
+        nameColumn.appendChild(elem)
     });
 }
 
