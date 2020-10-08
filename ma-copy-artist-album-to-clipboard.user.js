@@ -33,15 +33,19 @@ const css = `
     }
 `;
 
-const tmpl = `<div class="copy-artist-notification"></div>
-            <a class="iconContainer ui-state-default ui-corner-all" href="#" title="Copy to clipboard">
-                <span class="ui-icon ui-icon-copy">Copy</span>
-            </a>`;
+const tmpl = `
+    <div class="copy-artist-notification"></div>
+    <a class="iconContainer ui-state-default ui-corner-all" href="#" title="Copy to clipboard">
+        <span class="ui-icon ui-icon-copy">Copy</span>
+    </a>
+`;
 
 function renderButtons() {
     const artist = document.querySelector('h1.band_name a').textContent;
-    const bandDisco = document.querySelectorAll("#band_disco a.other, #band_disco a.album,  #band_disco a.single,  #band_disco a.demo");
-    let cpArr = []
+    const bandDisco = document.querySelectorAll(
+        '#band_disco a.other, #band_disco a.album,  #band_disco a.single, #band_disco a.demo',
+    );
+    const cpArr = [];
     bandDisco.forEach(link => {
         const cpStr = `${artist} - ${link.textContent}`;
         cpArr.push(cpStr);
@@ -52,12 +56,12 @@ function renderButtons() {
             link.parentNode.prepend(elem);
         });
     });
-    const cpStrs = cpArr.join("\n")
-    const copyAllTemplate = generateTemplate(tmpl, cpStrs, "all")
-    const nameColumn = document.querySelector("#ui-tabs-4 > table > thead > tr > th.releaseCol");
+    const cpStrs = cpArr.join('\n');
+    const copyAllTemplate = generateTemplate(tmpl, cpStrs, 'all');
+    const nameColumn = document.querySelector('#ui-tabs-4 > table > thead > tr > th.releaseCol');
     nameColumn.style.position = 'relative';
     copyAllTemplate.forEach(elem => {
-        nameColumn.prepend(elem)
+        nameColumn.prepend(elem);
     });
 }
 
@@ -67,7 +71,7 @@ function generateTemplate(html, cpStr, cpParam) {
     const [popUp, button] = template.content.children;
     button.addEventListener('click', (event) => {
         event.preventDefault();
-        GM_setClipboard(cpStr + "\n");
+        GM_setClipboard(`${cpStr}\n`);
         popUp.innerText = `Copied ${cpParam} to clipboard`;
         setTimeout(() => {
             popUp.style.display = 'none';
@@ -88,17 +92,17 @@ function waitUntilAjaxIsLoaded() {
 }
 
 function waitUntilAjaxIsLoadedAgain() {
-  let copyButton = document.querySelector(".ui-icon-copy")
-  if(!copyButton) {
-      renderButtons()
-  } else {
-      window.setTimeout(waitUntilAjaxIsLoadedAgain, 500);
-  }
+    let copyButton = document.querySelector('.ui-icon-copy');
+    if (!copyButton) {
+        renderButtons();
+    } else {
+        window.setTimeout(waitUntilAjaxIsLoadedAgain, 500);
+    }
 }
 
-document.querySelector("body").addEventListener("click", (e) => {
-   let className = e.target.parentElement.className
-   if(className == "ui-tabs-anchor") window.setTimeout(waitUntilAjaxIsLoadedAgain, 500);
+document.querySelector('body').addEventListener('click', (e) => {
+    let className = e.target.parentElement.className;
+    if (className == 'ui-tabs-anchor') window.setTimeout(waitUntilAjaxIsLoadedAgain, 500);
 });
 
 waitUntilAjaxIsLoaded();
