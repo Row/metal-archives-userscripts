@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name       Metal-Archives Copy artist - album to clipboard
-// @namespace  https://github.com/Row/metal-archives-userscripts
-// @version    0.2
-// @grant GM_setClipboard
-// @grant GM_addStyle
-// @description Adds a button next to each album title, when clicked 'artist name - album name' is copied to the clipboard.
-// @match      https://www.metal-archives.com/bands/*
-// @copyright  2019+, Rowolta
+// @name        Metal-Archives Copy artist - album to clipboard
+// @namespace   https://github.com/Row/metal-archives-userscripts
+// @version     0.3
+// @grant       GM_setClipboard
+// @grant       GM_addStyle
+// @description Adds a button next to each album title, when clicked 'artist name - album name' is
+//              copied to the clipboard.
+// @match       https://www.metal-archives.com/bands/*
+// @copyright   2019+, Rowolta
 // ==/UserScript==
-
 
 const css = `
     .copy-artist-notification {
