@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Metal-Archives Copy artist - album to clipboard
 // @namespace   https://github.com/Row/metal-archives-userscripts
-// @version     0.3
+// @version     0.4
 // @grant       GM_setClipboard
 // @grant       GM_addStyle
 // @description Adds a button next to each album title, when clicked 'artist name - album name' is
