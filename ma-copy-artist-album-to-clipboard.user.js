@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Metal-Archives Copy artist - album to clipboard
 // @namespace   https://github.com/Row/metal-archives-userscripts
-// @version     0.4
+// @version     0.4.1
 // @grant       GM_setClipboard
 // @grant       GM_addStyle
 // @description Adds a button next to each album title, when clicked 'artist name - album name' is
@@ -40,34 +40,9 @@ const tmpl = `
     </a>
 `;
 
-function renderButtons() {
-    const artist = document.querySelector('h1.band_name a').textContent;
-    const bandDisco = document.querySelectorAll(
-        '#band_disco a.other, #band_disco a.album,  #band_disco a.single, #band_disco a.demo',
-    );
-    const cpArr = [];
-    bandDisco.forEach(link => {
-        const cpStr = `${artist} - ${link.textContent}`;
-        cpArr.push(cpStr);
-        const elements = generateTemplate(tmpl, cpStr, cpStr);
-        const insertPoint = link.parentNode;
-        insertPoint.style.position = 'relative';
-        elements.forEach(elem => {
-            link.parentNode.prepend(elem);
-        });
-    });
-    const cpStrs = cpArr.join('\n');
-    const copyAllTemplate = generateTemplate(tmpl, cpStrs, 'all');
-    const nameColumn = document.querySelector('#ui-tabs-4 > table > thead > tr > th.releaseCol');
-    nameColumn.style.position = 'relative';
-    copyAllTemplate.forEach(elem => {
-        nameColumn.prepend(elem);
-    });
-}
-
-function generateTemplate(html, cpStr, cpParam) {
+function generateTemplate(cpStr, cpParam) {
     const template = document.createElement('template');
-    template.innerHTML = html;
+    template.innerHTML = tmpl;
     const [popUp, button] = template.content.children;
     button.addEventListener('click', (event) => {
         event.preventDefault();
@@ -78,7 +53,33 @@ function generateTemplate(html, cpStr, cpParam) {
         }, 2000);
         popUp.style.display = 'block';
     });
-    return template.content.childNodes;
+    return [popUp, button];
+}
+
+function renderButtons() {
+    const artist = document.querySelector('h1.band_name a').textContent;
+    const bandDisco = document.querySelectorAll(
+        '#band_disco a.other, #band_disco a.album,  #band_disco a.single, #band_disco a.demo',
+    );
+    const cpArr = [];
+    bandDisco.forEach(link => {
+        const cpStr = `${artist} - ${link.textContent}`;
+        cpArr.push(cpStr);
+        const elements = generateTemplate(cpStr, cpStr);
+        const insertPoint = link.parentNode;
+        insertPoint.style.position = 'relative';
+        elements.forEach(elem => {
+            insertPoint.prepend(elem);
+        });
+        console.log({ insertPoint, elements });
+    });
+    const cpStrs = cpArr.join('\n');
+    const copyAllTemplate = generateTemplate(cpStrs, 'all');
+    const nameColumn = document.querySelector('th.releaseCol');
+    nameColumn.style.position = 'relative';
+    copyAllTemplate.forEach(elem => {
+        nameColumn.prepend(elem);
+    });
 }
 
 function waitUntilAjaxIsLoaded() {
@@ -90,19 +91,5 @@ function waitUntilAjaxIsLoaded() {
         window.setTimeout(waitUntilAjaxIsLoaded, 500);
     }
 }
-
-function waitUntilAjaxIsLoadedAgain() {
-    let copyButton = document.querySelector('.ui-icon-copy');
-    if (!copyButton) {
-        renderButtons();
-    } else {
-        window.setTimeout(waitUntilAjaxIsLoadedAgain, 500);
-    }
-}
-
-document.querySelector('body').addEventListener('click', (e) => {
-    let className = e.target.parentElement.className;
-    if (className == 'ui-tabs-anchor') window.setTimeout(waitUntilAjaxIsLoadedAgain, 500);
-});
 
 waitUntilAjaxIsLoaded();
