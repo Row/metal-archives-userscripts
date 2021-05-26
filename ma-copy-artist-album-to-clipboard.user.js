@@ -66,13 +66,24 @@ function generateTemplate(cpStr, cpParam) {
     return [popUp, button];
 }
 
-function renderButtons() {
-    const artist = document.querySelector('h1.band_name a').textContent;
-    const bandDisco = document.querySelectorAll(
-        '#band_disco a.other, #band_disco a.album,  #band_disco a.single, #band_disco a.demo',
-    );
+const s = new Set();
+
+const ALBUM_LINK_SELECTOR = 'a[href*="/albums/"]';
+
+function renderButtons(node) {
+    const artist = 'unknown';
+
+    // https://www.metal-archives.com/albums/Metallica/Ride_the_Lightning/544
+    const bandDisco = node.querySelectorAll(ALBUM_LINK_SELECTOR);
     const cpArr = [];
     bandDisco.forEach(link => {
+        if (s.has(link)) return;
+        s.add(link)
+        const { pathname } = new URL(link.href);
+        const paths = pathname.split('/');
+        const artist = paths[1] === 'albums'
+            ? decodeURIComponent(paths[2])
+            : 'unknown artist';
         const cpStr = `${artist} - ${link.textContent}`;
         cpArr.push(cpStr);
         const elements = generateTemplate(cpStr, cpStr);
@@ -81,25 +92,38 @@ function renderButtons() {
         elements.forEach(elem => {
             insertPoint.prepend(elem);
         });
-        console.log({ insertPoint, elements });
     });
-    const cpStrs = cpArr.join('\n');
-    const copyAllTemplate = generateTemplate(cpStrs, 'all');
-    const nameColumn = document.querySelector('th.releaseCol');
-    nameColumn.style.position = 'relative';
-    copyAllTemplate.forEach(elem => {
-        nameColumn.prepend(elem);
-    });
+    // const cpStrs = cpArr.join('\n');
+    // const copyAllTemplate = generateTemplate(cpStrs, 'all');
+    // const nameColumn = document.querySelector('th.releaseCol');
+    // nameColumn.style.position = 'relative';
+    // copyAllTemplate.forEach(elem => {
+    //     nameColumn.prepend(elem);
+    // });
+}
+function initObserver() {
+    const targetNode = document.querySelector('#content_wrapper');
+
+    const config = { attributes: false, childList: true, subtree: true };
+
+    const callback = (mutationsList, observer) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                Array.from(mutation.addedNodes).forEach((node) => {
+                    if (typeof node.querySelector === 'function' && node.querySelector(ALBUM_LINK_SELECTOR)) {
+                        observer.disconnect();
+                        renderButtons(node);
+                        observer.observe(targetNode, config);
+                    }
+                });
+            }
+        }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
 }
 
-function waitUntilAjaxIsLoaded() {
-    let band = document.querySelector('#band_disco table a');
-    if (band) {
-        GM_addStyle(css);
-        renderButtons();
-    } else {
-        window.setTimeout(waitUntilAjaxIsLoaded, 500);
-    }
-}
-
-waitUntilAjaxIsLoaded();
+GM_addStyle(css);
+renderButtons(document);
+initObserver();
