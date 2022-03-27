@@ -82,9 +82,9 @@ function renderButtons(node) {
         const { pathname } = new URL(link.href);
         const paths = pathname.split('/');
         const artist = paths[1] === 'albums'
-            ? decodeURIComponent(paths[2])
+            ? decodeURIComponent(paths[2]).replaceAll('_', ' ')
             : 'unknown artist';
-        const cpStr = `${artist} - ${link.textContent}`;
+        const cpStr = `${artist} ${link.textContent}`;
         cpArr.push(cpStr);
         const elements = generateTemplate(cpStr, cpStr);
         const insertPoint = link.parentNode;
